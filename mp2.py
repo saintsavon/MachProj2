@@ -1,25 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-@author: szczurpi
-01/18/2021
-Spring 1, 2021
-Artificial Intelligence
-Machine Problem 2
-Agent vs Monster Minimax Search with alpha/beta pruning
-Description:
-    In this game, the agent has to grab the gold and escape to the exit position.
-    The agent has to do this while trying to escape from the monster,
-    which will eat the agent if they are co-located.
-    The monster can move in four directions, except the walls.
-        It can also stay in the same position.
-    The agent can move in the same directions, but can also:
-        grab the gold (if co-located with it), and
-        build a wall in one of four directions, assuming the square is empty
-    The agent must move or build a wall in each turn (cannot do nothing)
-
-Uses a custom evaluation function for estimating utilities past a maximum depth
-"""
 
 import numpy as np
 import random
@@ -200,30 +180,60 @@ class GenGameBoard:
         self.make_move(possible_moves[rand_move_index], False)
 
         # Make AI move
-        # best_action = self.alpha_beta_search()
-        # self.make_move(best_action, False)
+        best_action = self.alpha_beta_search()
+        self.make_move(best_action, False)
 
-        # THIS IS WHERE THE MINIMAX SEARCH IS RAN (CURRENTLY SETUP FOR TIC TAC TOE, NEEDS TO BE ADJUSTED)
         best_action = self.minimax_search()
-        self.make_move(best_action[0]+1, best_action[1]+1, 'M')
+        self.make_move(best_action[0] + 1, best_action[1] + 1, 'M')
 
-    # THIS IS THE MINIMAX SEARCH WORKING OFF CURRENT-STATE (CURRENTLY SETUP FOR TIC TAC TOE, NEEDS TO BE ADJUSTED)
-     def minimax_search(self):
+    def alpha_beta_search(self):
+        v, best_action = self.max_value()
+        return best_action
+
+    def minimax_search(self):
         v, best_action = self.max_value()
         return best_action
 
     def max_value(self):
         if self.is_terminal():
-            return self.get_utility() #THIS NEEDS TO BE THE ACTUAL FUNCTION
+            return self.get_utility(), None
         v = -math.inf
+        beta = math.inf
+        alpha = -math.inf
         for action in self.get_actions():
             self.marks[action[0]][action[1]]: 'M'
-            min_val = self.min_value()
+            min_val, _ = self.min_value()
             self.marks[action[0]][action[1]]: ' '
             if min_val > v:
                 v = min_val
                 best_action = action
+            if v == 1:
+                return v, best_action
+            if v >= beta:
+                max(alpha, v)
+                return v, best_action
 
+            return v, best_action
+
+    def min_value(self):
+        if self.is_terminal():
+            return self.get_utility(), None
+        v = math.inf
+        beta = math.inf
+        alpha = -math.inf
+        for action in self.get_actions():
+            self.marks[action[0]][action[1]]: 'P'
+            max_val, _ = self.max_value()
+            self.marks[action[0]][action[1]]: ' '
+            if max_val < v:
+                v = max_val
+                best_action = action
+            if v == -1:
+                return v, best_action
+            if v <= alpha:
+                min(beta, v)
+                return v, best_action
+            return v, best_action
 
     def get_utility(self):
         if self.has_gold and self.player_pos == self.exit_pos:
@@ -242,10 +252,7 @@ class GenGameBoard:
         else:
             return False
 
-    """ TODO - Functions for needed for ALPHA/BETA SEARCH """
-
-
-###########################            
+###########################
 ### Program starts here ###
 ###########################        
 
