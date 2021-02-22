@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# NAME: Jaylen Scott
+# DATE: February 21st, 2021
+# COURSE: Artificial Intelligence
+# SEMESTER: Spring 2021
+# MP2: Alpha/Beta Search Program
+
 import numpy as np
 import random
 import math
