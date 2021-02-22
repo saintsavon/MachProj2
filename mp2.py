@@ -80,6 +80,7 @@ class GenGameBoard:
             print("--", end='')
 
         print("-")
+        print("Number pruned due to a/b: {}")
 
     def make_move(self, action, player_move):
         """
@@ -304,6 +305,7 @@ while True:
 
     # Print out the board again
     board.print_board()
+
 
     # Check for ending condition
     # If game is over, check if computer won and end the game
