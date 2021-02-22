@@ -203,10 +203,35 @@ class GenGameBoard:
         # best_action = self.alpha_beta_search()
         # self.make_move(best_action, False)
 
-    # THIS IS THE MINIMAX SEARCH WORKING OFF CURRENT-STATE
-    # def minimax_search(self):
-    #    v, best_action = max_value()
-    #    return best_action
+        # THIS IS WHERE THE MINIMAX SEARCH IS RAN (CURRENTLY SETUP FOR TIC TAC TOE, NEEDS TO BE ADJUSTED)
+        best_action = self.minimax_search()
+        self.make_move(best_action[0]+1, best_action[1]+1, 'M')
+
+    # THIS IS THE MINIMAX SEARCH WORKING OFF CURRENT-STATE (CURRENTLY SETUP FOR TIC TAC TOE, NEEDS TO BE ADJUSTED)
+     def minimax_search(self):
+        v, best_action = self.max_value()
+        return best_action
+
+    def max_value(self):
+        if self.is_terminal():
+            return self.get_utility() #THIS NEEDS TO BE THE ACTUAL FUNCTION
+        v = -math.inf
+        for action in self.get_actions():
+            self.marks[action[0]][action[1]]: 'M'
+            min_val = self.min_value()
+            self.marks[action[0]][action[1]]: ' '
+            if min_val > v:
+                v = min_val
+                best_action = action
+
+
+    def get_utility(self):
+        if self.has_gold and self.player_pos == self.exit_pos:
+            return -1
+        elif self.num_moves == self.max_moves or self.monster_pos == self.player_pos:
+            return 1
+        else:
+            return 0
 
     def is_terminal(self, player_move):
         """
